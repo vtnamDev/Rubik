@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a100f">
+<title>Rubik 3D Studio</title>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}
+</script>
+<style>
+:root{color-scheme:dark;--bg:#080e0d;--panel:#111b1a;--panel2:#152220;--line:#a7c4ba20;--text:#edf8f2;--muted:#879d95;--jade:#70e2b0;--mint:#b8f2d3;--gold:#e5c27b}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at 50% -16%,#1b3029 0,#0b1512 48%,#080e0d 82%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}body{padding:18px;overflow-x:hidden}.shell{max-width:1240px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(145deg,#abf0cf,#48b98d);display:grid;place-items:center;color:#071a12;font-size:25px;font-weight:950;box-shadow:0 8px 30px #5ed7a52c}.brand h1{font-size:15px;letter-spacing:.13em;margin:0}.brand p{font-size:10px;color:var(--muted);letter-spacing:.17em;margin:4px 0 0;text-transform:uppercase}.online{padding:8px 12px;border:1px solid var(--line);border-radius:999px;font-size:10px;color:#b0c6bd;letter-spacing:.1em;background:#ffffff06}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#6ee4a8;box-shadow:0 0 12px #6ee4a8;margin-right:7px}.hero{margin:6px 2px 18px}.eyebrow{font-size:10px;color:var(--jade);letter-spacing:.24em;font-weight:850}.hero h2{font-size:clamp(29px,4.5vw,43px);letter-spacing:-.055em;line-height:1.03;margin:8px 0 7px}.hero p{font-size:13px;color:#9eb1a8;line-height:1.6;margin:0;max-width:680px}.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(330px,.8fr);gap:16px;align-items:stretch}.panel{background:linear-gradient(145deg,#14201eeb,#0c1514f5);border:1px solid var(--line);border-radius:23px;box-shadow:0 18px 65px #0006,inset 0 1px #ffffff09;overflow:hidden}.stage{position:relative;min-height:570px;background:radial-gradient(ellipse at 50% 47%,#1e3a3066,#0e1a1777 46%,#09110f 82%)}#view{position:absolute;inset:0;width:100%;height:100%;touch-action:none;outline:none}.stage-head{position:absolute;top:16px;left:17px;right:17px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;pointer-events:none}.stage-name{font-size:10px;letter-spacing:.18em;color:#a5bbb1}.stage-desc{font-size:10px;color:#6f8980;margin-top:5px}.stats{display:flex;gap:7px}.stat{min-width:70px;padding:8px 10px;border-radius:12px;text-align:center;background:#0a1311d9;border:1px solid #a9c9b51f;backdrop-filter:blur(12px)}.stat b{display:block;font-size:16px;font-variant-numeric:tabular-nums}.stat span{font-size:8px;letter-spacing:.14em;color:#84998f}.stage-tools{position:absolute;left:14px;right:14px;bottom:49px;display:flex;justify-content:center;gap:7px;pointer-events:auto}.mode{border:1px solid #b6d2c22b;background:#101e1bdc;color:#a9c3b7;border-radius:999px;padding:8px 12px;font-size:10px;letter-spacing:.07em;cursor:pointer}.mode.active{color:#071b12;background:linear-gradient(110deg,#a9ecc7,#59d6a0);border-color:transparent;font-weight:850}.hint{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#799187;background:#07100ed9;border:1px solid #a5cab71c;border-radius:999px;padding:7px 11px;font-size:9px;letter-spacing:.06em;pointer-events:none}.side{padding:18px;display:flex;flex-direction:column;gap:15px}.section{display:block}.sect-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.sect-head h3{font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin:0;color:#c6d9ce}.sect-head span{font-size:9px;letter-spacing:.1em;color:#70867b}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{min-height:42px;border:1px solid #b5d0c21d;border-radius:12px;background:#ffffff08;color:#e2f1e8;font-size:11px;font-weight:750;padding:9px;cursor:pointer;transition:transform .16s,border-color .16s,background .16s}.btn:active{transform:scale(.97)}.btn:hover{border-color:#83dfb366;background:#ffffff11}.btn.primary{background:linear-gradient(110deg,#9deac0,#4ccb99);color:#071810;border:0;box-shadow:0 7px 22px #43c48b24}.btn.solve{background:#75d9a716;border-color:#75d9a744;color:#9be7bd}.btn.reset{color:#e8c5a0;border-color:#c7a47b26}.rule{height:1px;background:var(--line)}.moves{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.move{border:1px solid #b1cbbd1b;background:#ffffff07;border-radius:10px;min-height:42px;color:#eff8f2;font-weight:850;font-size:12px;cursor:pointer}.move small{display:block;font-size:8px;color:#82988d;font-weight:500;margin-top:2px}.move:active{background:#6cdba31a;transform:scale(.96)}.history{min-height:62px;max-height:102px;overflow:auto;border:1px solid #a4c8b51c;background:#06100d8f;border-radius:12px;padding:9px;display:flex;align-content:flex-start;flex-wrap:wrap;gap:5px}.token{font-size:10px;padding:5px 7px;border:1px solid #67d69f30;color:#b6ebcb;border-radius:7px;background:#5bd99b10}.empty{font-size:10px;color:#71877c;padding:8px 2px}.records{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#8da196}.records strong{font-size:12px;color:#e4f1e8;font-variant-numeric:tabular-nums}.foot{display:flex;justify-content:space-between;gap:12px;font-size:9px;color:#61776c;letter-spacing:.07em;margin:14px 4px}.toast{position:fixed;z-index:50;left:50%;bottom:24px;transform:translate(-50%,14px);opacity:0;transition:.2s;background:#14241e;border:1px solid #74d9a766;border-radius:11px;padding:11px 15px;color:#e9fff1;font-size:11px;box-shadow:0 15px 40px #0008;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:850px){body{padding:12px}.layout{grid-template-columns:1fr}.stage{min-height:min(59vh,540px)}.side{display:flex}.hero{margin-bottom:14px}.hero p{font-size:12px}}
+@media(max-width:560px){body{padding:9px}.top{margin-bottom:16px}.brand h1{font-size:12px}.brand p{font-size:8px}.online{font-size:8px;padding:7px 9px}.logo{width:40px;height:40px}.hero h2{font-size:31px}.hero p{font-size:11px}.stage{min-height:420px;border-radius:18px}.panel{border-radius:18px}.stage-head{top:11px;left:11px;right:11px}.stat{min-width:59px;padding:7px 7px}.stat b{font-size:14px}.stat span{font-size:7px}.stage-tools{bottom:45px}.mode{font-size:9px;padding:8px 10px}.hint{font-size:8px;bottom:11px}.side{padding:13px;gap:13px}.moves{grid-template-columns:repeat(6,1fr);gap:4px}.move{font-size:11px;min-height:40px}.move small{font-size:7px}.btn{font-size:10px;min-height:40px}.foot{font-size:8px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top"><div class="brand"><div class="logo">R</div><div><h1>RUBIK / CUBE LAB</h1><p>Interactive 3D puzzle studio</p></div></div><div class="online"><i class="dot"></i>3D ENGINE ONLINE</div></header>
+<section class="hero"><div class="eyebrow">THE CUBE EXPERIENCE</div><h2>Think in turns.</h2><p>Chạm hoặc vuốt trực tiếp lên mặt Rubik để xoay. Chuyển sang Orbit để kéo xoay góc nhìn và dùng hai ngón để phóng to/thu nhỏ.</p></section>
+<main class="layout">
+<section class="panel stage"><div id="view" aria-label="Khối Rubik 3D"></div><div class="stage-head"><div><div class="stage-name">3 × 3 × 3 / CLASSIC</div><div class="stage-desc">Face turns · Orbit camera · Smooth animation</div></div><div class="stats"><div class="stat"><b id="timer">00:00.0</b><span>TIME</span></div><div class="stat"><b id="count">0</b><span>MOVES</span></div></div></div><div class="stage-tools"><button class="mode active" id="faceMode">◉ XOAY MẶT</button><button class="mode" id="orbitMode">◎ XOAY KHỐI</button><button class="mode" id="cameraReset">↺ CĂN CAMERA</button></div><div class="hint" id="gestureHint">CHẠM MẶT ĐỂ XOAY · VUỐT ĐỂ ĐỔI CHIỀU</div></section>
+<aside class="panel side">
+<section class="section"><div class="sect-head"><h3>Session controls</h3><span>01 / PLAY</span></div><div class="actions"><button class="btn primary" id="scramble">⤨ XÁO TRỘN</button><button class="btn solve" id="solve">✦ GIẢI CHUỖI</button><button class="btn" id="undo">↶ HOÀN TÁC</button><button class="btn reset" id="reset">⟲ ĐẶT LẠI</button></div></section>
+<div class="rule"></div>
+<section class="section"><div class="sect-head"><h3>Move controls</h3><span>SINGMASTER</span></div><div class="moves">
+<button class="move" data-m="U">U<small>Top</small></button><button class="move" data-m="U'">U'<small>Top'</small></button><button class="move" data-m="D">D<small>Bottom</small></button><button class="move" data-m="D'">D'<small>Bottom'</small></button><button class="move" data-m="R">R<small>Right</small></button><button class="move" data-m="R'">R'<small>Right'</small></button>
+<button class="move" data-m="L">L<small>Left</small></button><button class="move" data-m="L'">L'<small>Left'</small></button><button class="move" data-m="F">F<small>Front</small></button><button class="move" data-m="F'">F'<small>Front'</small></button><button class="move" data-m="B">B<small>Back</small></button><button class="move" data-m="B'">B'<small>Back'</small></button>
+</div></section>
+<div class="rule"></div>
+<section class="section"><div class="sect-head"><h3>Move history</h3><span id="historyCount">0 MOVES</span></div><div class="history" id="history"><span class="empty">Chưa có nước đi. Hãy bắt đầu xáo trộn hoặc chạm một mặt.</span></div></section>
+<div class="rule"></div><div class="records"><span>BEST SESSION</span><strong id="best">--:--.-</strong></div>
+</aside>
+</main>
+<footer class="foot"><span>RUBIK CUBE LAB · THREE.JS</span><span>GRAPHITE / JADE EDITION</span><span>DESKTOP + MOBILE</span></footer>
+</div><div class="toast" id="toast"></div>
+<script type="module">
+import * as THREE from "three";
+import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+import {RoundedBoxGeometry} from "three/addons/geometries/RoundedBoxGeometry.js";
+
+const $=id=>document.getElementById(id),host=$("view");
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x09120f);
+const camera=new THREE.PerspectiveCamera(42,1,.1,80);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:"high-performance"});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;host.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xd6efe2,0x18241d,2.0));
+const key=new THREE.DirectionalLight(0xfff8e9,3.0);key.position.set(5,7,6);scene.add(key);
+const rim=new THREE.DirectionalLight(0x72d9a8,1.7);rim.position.set(-5,3,-5);scene.add(rim);
+const fill=new THREE.PointLight(0x64d6a4,22,15);fill.position.set(-3,-1,4);scene.add(fill);
+const floor=new THREE.Mesh(new THREE.CircleGeometry(4,64),new THREE.MeshBasicMaterial({color:0x14261d,transparent:true,opacity:.30}));floor.rotation.x=-Math.PI/2;floor.position.y=-2.2;scene.add(floor);
+const ring=new THREE.Mesh(new THREE.TorusGeometry(2.35,.009,6,100),new THREE.MeshBasicMaterial({color:0x61c997,transparent:true,opacity:.23}));ring.rotation.x=Math.PI/2;ring.position.y=-2.17;scene.add(ring);
+const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.dampingFactor=.075;orbit.enablePan=false;orbit.minDistance=5.1;orbit.maxDistance=12;orbit.target.set(0,0,0);orbit.enabled=false;
+const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
+const root=new THREE.Group();scene.add(root);
+const dark=0x151f1b,colors={xp:0xe34f59,xn:0xf29a4a,yp:0xf5f3e9,yn:0xf3cf47,zp:0x30c89a,zn:0x438fe2};
+let cubies=[],history=[],count=0,queue=Promise.resolve(),mode="face",startAt=0,timerId=null,gesture=null;
+const fmt=t=>{let m=Math.floor(t/60000),s=Math.floor(t/1000)%60,d=Math.floor(t%1000/100);return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")+"."+d};
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.id);toast.id=setTimeout(()=>t.classList.remove("show"),2100)}
+function startTimer(){if(startAt)return;startAt=performance.now();timerId=setInterval(()=>$("timer").textContent=fmt(performance.now()-startAt),100)}
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}if(startAt){const t=performance.now()-startAt;$("timer").textContent=fmt(t);const best=Number(localStorage.getItem("rubik-best")||0);if(!best||t<best){localStorage.setItem("rubik-best",String(t));$("best").textContent=fmt(t);}}startAt=0}
+const best=Number(localStorage.getItem("rubik-best")||0);$("best").textContent=best?fmt(best):"--:--.-";
+function updateUI(){$("count").textContent=count;$("historyCount").textContent=history.length+" MOVES";const h=$("history");h.innerHTML="";if(!history.length){h.innerHTML='<span class="empty">Chưa có nước đi. Hãy bắt đầu xáo trộn hoặc chạm một mặt.</span>';return;}history.slice(-70).forEach(x=>{const s=document.createElement("span");s.className="token";s.textContent=x;h.appendChild(s);});}
+function resize(){const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight),mobile=w<600;camera.aspect=w/h;camera.fov=mobile?43:40;camera.position.set(mobile?4.9:4.35,mobile?3.9:3.7,mobile?8.0:6.8);camera.updateProjectionMatrix();renderer.setSize(w,h,false);orbit.update();}new ResizeObserver(resize).observe(host);resize();
+const sharedGeo=new RoundedBoxGeometry(.94,.94,.94,3,.055);
+function makeCube(){for(const c of cubies)root.remove(c);cubies=[];history=[];count=0;stopTimer();$("timer").textContent="00:00.0";
+for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++){
+const mats=[
+new THREE.MeshPhysicalMaterial({color:x===1?colors.xp:dark,roughness:.34,metalness:.025,clearcoat:.5}),
+new THREE.MeshPhysicalMaterial({color:x===-1?colors.xn:dark,roughness:.34,metalness:.025,clearcoat:.5}),
+new THREE.MeshPhysicalMaterial({color:y===1?colors.yp:dark,roughness:.34,metalness:.025,clearcoat:.5}),
+new THREE.MeshPhysicalMaterial({color:y===-1?colors.yn:dark,roughness:.34,metalness:.025,clearcoat:.5}),
+new THREE.MeshPhysicalMaterial({color:z===1?colors.zp:dark,roughness:.34,metalness:.025,clearcoat:.5}),
+new THREE.MeshPhysicalMaterial({color:z===-1?colors.zn:dark,roughness:.34,metalness:.025,clearcoat:.5})
+];
+const c=new THREE.Mesh(sharedGeo,mats);c.position.set(x,y,z);c.userData.grid={x,y,z};root.add(c);cubies.push(c);
+}updateUI();resetCamera();}
+const moves={U:{axis:"y",layer:1,sign:-1},D:{axis:"y",layer:-1,sign:1},R:{axis:"x",layer:1,sign:-1},L:{axis:"x",layer:-1,sign:1},F:{axis:"z",layer:1,sign:-1},B:{axis:"z",layer:-1,sign:1}};
+function inverse(m){return m.endsWith("'")?m[0]:m+"'";}
+function rotateGrid(p,axis,sign){const {x,y,z}=p;if(axis==="x")return sign>0?{x,y:-z,z:y}:{x,y:z,z:-y};if(axis==="y")return sign>0?{x:z,y,z:-x}:{x:-z,y,z:x};return sign>0?{x:-y,y:x,z}:{x:y,y:-x,z};}
+function faceToken(n){if(n.x>.7)return "R";if(n.x<-.7)return "L";if(n.y>.7)return "U";if(n.y<-.7)return "D";if(n.z>.7)return "F";if(n.z<-.7)return "B";return null;}
+function rotateFace(token){const f=moves[token[0]];if(!f)return Promise.resolve();const sign=token.endsWith("'")?-f.sign:f.sign,angle=sign*Math.PI/2,axis=f.axis;const pivot=new THREE.Group();root.add(pivot);const selected=cubies.filter(c=>Math.round(c.userData.grid[axis])===f.layer);selected.forEach(c=>pivot.attach(c));
+return new Promise(resolve=>{let t0=0;const duration=175;function frame(now){if(!t0)t0=now;const t=Math.min(1,(now-t0)/duration),ease=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;pivot.rotation[axis]=angle*ease;if(t<1){requestAnimationFrame(frame);return;}selected.forEach(c=>{const p=rotateGrid(c.userData.grid,axis,sign);c.userData.grid=p;root.attach(c);c.position.set(p.x,p.y,p.z);});root.remove(pivot);resolve();}requestAnimationFrame(frame);});}
+function enqueue(token,record=true){queue=queue.then(async()=>{startTimer();await rotateFace(token);count++;if(record)history.push(token);updateUI();}).catch(e=>{console.error(e);toast("Lỗi thao tác. Hãy đặt lại cube.");});return queue;}
+function scramble(){queue=queue.then(async()=>{history=[];count=0;stopTimer();$("timer").textContent="00:00.0";updateUI();const faces=Object.keys(moves),seq=[];let prev="";for(let i=0;i<22;i++){let f;do{f=faces[Math.floor(Math.random()*6)];}while(f===prev);prev=f;seq.push(Math.random()<.5?f:f+"'");}for(const m of seq){startTimer();await rotateFace(m);history.push(m);count++;updateUI();}toast("Đã xáo trộn 22 nước đi.");});}
+function solve(){queue=queue.then(async()=>{if(!history.length){toast("Chưa có chuỗi thao tác để giải.");return;}const seq=history.slice().reverse().map(inverse);toast("Đang giải ngược "+seq.length+" nước đi...");for(const m of seq){await rotateFace(m);count++;}history=[];stopTimer();updateUI();toast("Đã khôi phục trạng thái trước scramble.");});}
+function undo(){queue=queue.then(async()=>{if(!history.length){toast("Không còn nước đi để hoàn tác.");return;}const m=history.pop();await rotateFace(inverse(m));count++;updateUI();});}
+function reset(){queue=queue.then(()=>{makeCube();toast("Đã đưa Rubik về trạng thái solved.");});}
+function resetCamera(){orbit.reset();orbit.target.set(0,0,0);const mobile=host.clientWidth<600;camera.position.set(mobile?4.9:4.35,mobile?3.9:3.7,mobile?8:6.8);camera.lookAt(0,0,0);orbit.update();}
+function setMode(next){mode=next;orbit.enabled=next==="orbit";$("faceMode").classList.toggle("active",mode==="face");$("orbitMode").classList.toggle("active",mode==="orbit");$("gestureHint").textContent=mode==="face"?"CHẠM MẶT ĐỂ XOAY · VUỐT THEO MẶT ĐỂ ĐỔI CHIỀU":"KÉO ĐỂ XOAY GÓC NHÌN · LĂN / CHỤM ĐỂ ZOOM";}
+$("faceMode").onclick=()=>setMode("face");$("orbitMode").onclick=()=>setMode("orbit");$("cameraReset").onclick=resetCamera;
+$("scramble").onclick=scramble;$("solve").onclick=solve;$("undo").onclick=undo;$("reset").onclick=reset;
+document.querySelectorAll("[data-m]").forEach(b=>b.addEventListener("click",()=>enqueue(b.dataset.m)));
+function pick(e){const r=renderer.domElement.getBoundingClientRect();pointer.x=((e.clientX-r.left)/r.width)*2-1;pointer.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(cubies,false)[0];if(!hit)return null;const c=hit.object,normal=hit.face.normal.clone().transformDirection(c.matrixWorld).round();const token=faceToken(normal);if(!token)return null;const axis=(token==="R"||token==="L")?"x":(token==="U"||token==="D")?"y":"z";if(Math.round(c.userData.grid[axis])!==moves[token].layer)return null;return {token,point:hit.point.clone(),normal,cube:c};}
+function projectPoint(v){const p=v.clone().project(camera);return {x:(p.x*.5+.5)*renderer.domElement.clientWidth,y:(-p.y*.5+.5)*renderer.domElement.clientHeight};}
+renderer.domElement.addEventListener("pointerdown",e=>{if(mode!=="face")return;const hit=pick(e);if(!hit)return;e.preventDefault();gesture={id:e.pointerId,x:e.clientX,y:e.clientY,hit};renderer.domElement.setPointerCapture(e.pointerId);});
+renderer.domElement.addEventListener("pointerup",e=>{if(!gesture||gesture.id!==e.pointerId)return;const g=gesture;gesture=null;const dx=e.clientX-g.x,dy=e.clientY-g.y;if(Math.hypot(dx,dy)<8){enqueue(g.hit.token);return;}const center=new THREE.Vector3(0,0,0),radial=g.hit.point.clone().sub(center);radial.addScaledVector(g.hit.normal,-radial.dot(g.hit.normal));if(radial.lengthSq()<.0001){enqueue(g.hit.token);return;}const tangent=radial.clone().cross(g.hit.normal).normalize();const p1=projectPoint(g.hit.point),p2=projectPoint(g.hit.point.clone().addScaledVector(tangent,.45));const tx=p2.x-p1.x,ty=p2.y-p1.y;const clockwise=(dx*tx+dy*ty)>0;enqueue(clockwise?g.hit.token:inverse(g.hit.token));});
+renderer.domElement.addEventListener("pointercancel",()=>gesture=null);
+window.addEventListener("keydown",e=>{if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;if(/^(INPUT|TEXTAREA|BUTTON|SELECT)$/.test(document.activeElement.tagName))return;const k=e.key.toUpperCase();if(moves[k])enqueue(e.shiftKey?k+"'":k);});
+makeCube();
+function render(){requestAnimationFrame(render);orbit.update();renderer.render(scene,camera);}render();
+</script>
+</body>
+</html>
