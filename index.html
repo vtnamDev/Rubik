@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080d17">
+<meta name="description" content="Rubik Cube Lab — mô phỏng Rubik 3D tương tác, luyện tập, xáo trộn và giải lại chuỗi thao tác.">
+<title>Rubik Cube Lab — 3D Studio</title>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}
+</script>
+<style>
+:root{color-scheme:dark;--bg:#080d17;--panel:rgba(18,27,43,.78);--line:rgba(166,190,230,.13);--muted:#8e9db5;--text:#edf4ff;--cyan:#62e4dc;--blue:#72a7ff;--lime:#a7f3c8}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at 50% -20%,#1b3150 0%,#0b1423 42%,var(--bg) 76%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+body{min-height:100vh;padding:22px;overflow-x:hidden}.shell{max-width:1440px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:2px 0 20px}.brand{display:flex;align-items:center;gap:13px}.logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(145deg,#6be6df,#497de1);box-shadow:0 8px 30px #4ecfc533;display:grid;place-items:center;color:#06121b;font-weight:950;font-size:23px}.brand h1{font-size:17px;letter-spacing:.08em;margin:0;font-weight:850}.brand p{margin:4px 0 0;color:var(--muted);font-size:11px;letter-spacing:.16em;text-transform:uppercase}.topright{display:flex;align-items:center;gap:9px}.pill{border:1px solid var(--line);background:#ffffff08;color:#bac8dc;border-radius:999px;padding:8px 12px;font-size:11px;letter-spacing:.08em}.live{width:7px;height:7px;background:#5fe2ae;border-radius:50%;display:inline-block;margin-right:7px;box-shadow:0 0 12px #5fe2ae}
+.hero{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:8px 2px 18px}.eyebrow{font-size:10px;color:var(--cyan);letter-spacing:.23em;font-weight:800;text-transform:uppercase}.hero h2{font-size:clamp(27px,4vw,42px);letter-spacing:-.045em;margin:7px 0 5px;line-height:1.04}.hero p{color:#9cacbf;font-size:13px;margin:0;max-width:580px;line-height:1.6}.hero-note{color:#8192a9;font-size:11px;text-align:right;line-height:1.6}
+.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(330px,.85fr);gap:16px;align-items:stretch}.panel{border:1px solid var(--line);background:linear-gradient(145deg,rgba(22,34,54,.88),rgba(10,17,29,.91));border-radius:23px;box-shadow:0 18px 60px #0005,inset 0 1px #ffffff09;overflow:hidden}.stage{min-height:620px;position:relative;background:radial-gradient(ellipse at 50% 46%,#17334b66 0%,#0d182766 34%,#090f1a 78%)}#view{position:absolute;inset:0;width:100%;height:100%;touch-action:none}.stage-top{position:absolute;top:18px;left:19px;right:19px;display:flex;justify-content:space-between;align-items:start;pointer-events:none}.stage-label{font-size:10px;letter-spacing:.18em;color:#93a9c4;text-transform:uppercase}.stage-sub{font-size:11px;color:#61758e;margin-top:5px}.stats{display:flex;gap:8px}.stat{border:1px solid #9bb5d522;background:#07111f9c;border-radius:12px;padding:9px 12px;min-width:78px;text-align:center;backdrop-filter:blur(12px)}.stat b{display:block;font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:.04em}.stat span{font-size:9px;color:#8ea0b9;letter-spacing:.13em;text-transform:uppercase}.drag-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:#8295ad;font-size:10px;letter-spacing:.08em;background:#091321aa;border:1px solid #96aec51d;padding:8px 12px;border-radius:999px;white-space:nowrap;pointer-events:none}
+.side{padding:19px;display:flex;flex-direction:column;gap:17px}.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.section-title h3{font-size:12px;letter-spacing:.15em;text-transform:uppercase;margin:0;color:#c8d7eb}.section-title span{font-size:10px;color:#6f839e}.action-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{border:1px solid #a3bce425;background:#ffffff08;color:#e5efff;border-radius:12px;padding:11px 12px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s;min-height:42px}.btn:hover{transform:translateY(-1px);border-color:#7de2d966;background:#ffffff11}.btn:active{transform:translateY(0) scale(.985)}.btn:disabled{opacity:.38;cursor:not-allowed;transform:none}.btn.primary{background:linear-gradient(120deg,#58d9cf,#73a9ff);border:0;color:#081521;box-shadow:0 8px 22px #4bd8ca20}.btn.solve{background:#72a7ff17;border-color:#72a7ff4d;color:#a9c8ff}.btn.danger{color:#ffacb5;border-color:#ff889522}.moves-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.move{border:1px solid #a9c1e01d;background:#ffffff07;border-radius:11px;color:#eef5ff;min-height:42px;font-weight:800;cursor:pointer;font-size:13px;transition:.15s}.move small{font-size:8px;color:#8295ad;display:block;font-weight:500;margin-top:2px}.move:hover{border-color:#62e4dc88;background:#62e4dc12;color:#8ff3e8}.move:active{transform:scale(.95)}.divider{height:1px;background:var(--line)}.history{min-height:76px;border:1px solid #a3bce41c;background:#07101d88;border-radius:13px;padding:10px;display:flex;gap:6px;flex-wrap:wrap;align-content:flex-start;max-height:110px;overflow:auto}.token{font-size:11px;color:#b8d6ff;border:1px solid #72a7ff2c;background:#72a7ff12;border-radius:7px;padding:5px 7px}.empty{font-size:11px;color:#647893;padding:9px 2px}.note{font-size:10px;color:#71849e;line-height:1.6;margin:8px 0 0}.record{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#8b9db5;font-size:11px}.record strong{color:#dbe9fb;font-size:12px;font-variant-numeric:tabular-nums}.footer{display:flex;justify-content:space-between;gap:15px;color:#63758d;font-size:10px;letter-spacing:.04em;margin:15px 4px 0}.kbd{border:1px solid #91a7c42e;border-radius:5px;padding:2px 5px;color:#a8bad2;font-size:9px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,15px);opacity:0;transition:.25s;background:#16263a;border:1px solid #71ded566;color:#eaf9ff;padding:11px 15px;border-radius:12px;font-size:12px;box-shadow:0 12px 40px #0008;z-index:20;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:900px){body{padding:14px}.layout{grid-template-columns:1fr}.stage{min-height:min(68vh,570px)}.side{display:grid;grid-template-columns:1fr 1fr;align-items:start}.side .controls-block{grid-column:1/-1}.hero-note{display:none}}
+@media(max-width:560px){body{padding:10px}.top{margin-bottom:13px}.brand h1{font-size:14px}.brand p{font-size:9px}.pill{font-size:9px;padding:7px 9px}.hero{margin-bottom:13px}.hero h2{font-size:29px}.hero p{font-size:11px}.stage{min-height:410px;border-radius:18px}.panel{border-radius:18px}.stage-top{top:12px;left:12px;right:12px}.stat{min-width:64px;padding:7px 8px}.stat b{font-size:14px}.stat span{font-size:8px}.side{padding:13px;display:flex;gap:14px}.moves-grid{grid-template-columns:repeat(6,1fr);gap:5px}.move{min-height:39px;font-size:12px}.btn{font-size:11px;padding:10px 7px}.footer{font-size:9px}.drag-hint{bottom:12px;font-size:9px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <div class="brand"><div class="logo">R</div><div><h1>RUBIK / CUBE LAB</h1><p>Interactive 3D puzzle studio</p></div></div>
+    <div class="topright"><div class="pill"><i class="live"></i>3D ENGINE ONLINE</div><div class="pill">v1.0</div></div>
+  </header>
+  <section class="hero">
+    <div><div class="eyebrow">THE CUBE EXPERIENCE</div><h2>Think in turns.</h2><p>Xoay khối Rubik 3×3 trong không gian 3D, tự do luyện tập, tạo scramble và giải lại chuỗi nước đi.</p></div>
+    <div class="hero-note">DRAG TO ORBIT<br>SCROLL TO ZOOM</div>
+  </section>
+  <main class="layout">
+    <section class="panel stage">
+      <div id="view" aria-label="Mô hình Rubik 3D tương tác"></div>
+      <div class="stage-top"><div><div class="stage-label">3 × 3 × 3 / CLASSIC</div><div class="stage-sub">Orbit camera · Smooth turn animation</div></div><div class="stats"><div class="stat"><b id="timer">00:00.0</b><span>Time</span></div><div class="stat"><b id="count">0</b><span>Moves</span></div></div></div>
+      <div class="drag-hint">KÉO ĐỂ XOAY GÓC NHÌN · LĂN ĐỂ PHÓNG TO</div>
+    </section>
+    <aside class="panel side">
+      <section>
+        <div class="section-title"><h3>Session controls</h3><span>01 / PLAY</span></div>
+        <div class="action-row"><button class="btn primary" id="scramble">⤨ Xáo trộn</button><button class="btn solve" id="solve">✦ Giải cube</button><button class="btn" id="undo">↶ Hoàn tác</button><button class="btn danger" id="reset">⟲ Đặt lại</button></div>
+      </section>
+      <div class="divider"></div>
+      <section class="controls-block">
+        <div class="section-title"><h3>Move controls</h3><span>FACE / TURN</span></div>
+        <div class="moves-grid" id="moves">
+          <button class="move" data-m="U">U<small>Top</small></button><button class="move" data-m="U'">U'<small>Top'</small></button><button class="move" data-m="D">D<small>Bottom</small></button><button class="move" data-m="D'">D'<small>Bottom'</small></button><button class="move" data-m="R">R<small>Right</small></button><button class="move" data-m="R'">R'<small>Right'</small></button>
+          <button class="move" data-m="L">L<small>Left</small></button><button class="move" data-m="L'">L'<small>Left'</small></button><button class="move" data-m="F">F<small>Front</small></button><button class="move" data-m="F'">F'<small>Front'</small></button><button class="move" data-m="B">B<small>Back</small></button><button class="move" data-m="B'">B'<small>Back'</small></button>
+        </div>
+        <p class="note">Ký hiệu chuẩn Singmaster. Dấu ' là xoay ngược chiều kim đồng hồ khi nhìn trực diện vào mặt đó.</p>
+      </section>
+      <div class="divider"></div>
+      <section>
+        <div class="section-title"><h3>Move history</h3><span id="history-label">0 MOVES</span></div>
+        <div class="history" id="history"><span class="empty">Chưa có thao tác. Nhấn Xáo trộn để bắt đầu.</span></div>
+      </section>
+      <div class="divider"></div>
+      <div class="record"><span>BEST SESSION</span><strong id="best">--:--.-</strong></div>
+      <p class="note">Chế độ Giải cube đảo ngược chính xác chuỗi thao tác đã ghi nhận trong phiên này. Dùng nút Đặt lại để trở về trạng thái solved.</p>
+    </aside>
+  </main>
+  <footer class="footer"><span>RUBIK CUBE LAB · THREE.JS</span><span>Designed for desktop & mobile</span><span><span class="kbd">U</span> <span class="kbd">D</span> <span class="kbd">L</span> <span class="kbd">R</span> <span class="kbd">F</span> <span class="kbd">B</span> keyboard</span></footer>
+</div>
+<div class="toast" id="toast"></div>
+<script type="module">
+import * as THREE from "three";
+import {OrbitControls} from "three/addons/controls/OrbitControls.js";
+import {RoundedBoxGeometry} from "three/addons/geometries/RoundedBoxGeometry.js";
+
+const host=document.getElementById("view");
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0a1220);
+const camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(4.6,4.1,6.4);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.22;host.appendChild(renderer.domElement);
+const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.dampingFactor=.065;orbit.minDistance=4.2;orbit.maxDistance=11;orbit.target.set(0,0,0);
+scene.add(new THREE.HemisphereLight(0xb9dcff,0x182034,2.0));
+const key=new THREE.DirectionalLight(0xffffff,3.2);key.position.set(4,7,5);scene.add(key);
+const rim=new THREE.DirectionalLight(0x46b9ff,2.1);rim.position.set(-5,2,-4);scene.add(rim);
+const fill=new THREE.PointLight(0x5eead4,35,16);fill.position.set(-3,-1,4);scene.add(fill);
+const floor=new THREE.Mesh(new THREE.CircleGeometry(3.8,64),new THREE.MeshBasicMaterial({color:0x12243a,transparent:true,opacity:.34}));floor.rotation.x=-Math.PI/2;floor.position.y=-2.25;scene.add(floor);
+const dark=0x182233,faceColors={xp:0xe94d59,xn:0xff963f,yp:0xf4f7ff,yn:0xffd64c,zp:0x22c99a,zn:0x438bff};
+let cubies=[],history=[],moveCount=0,startedAt=0,timerInterval=null,chain=Promise.resolve(),busy=false;
+const $=id=>document.getElementById(id);
+const fmt=t=>{const m=Math.floor(t/60000),s=Math.floor(t/1000)%60,d=Math.floor(t%1000/100);return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")+"."+d};
+function showToast(s){const el=$("toast");el.textContent=s;el.classList.add("show");clearTimeout(showToast.t);showToast.t=setTimeout(()=>el.classList.remove("show"),2100)}
+function updateStats(){ $("count").textContent=moveCount;$("history-label").textContent=history.length+" MOVES";$("history").innerHTML="";if(!history.length){$("history").innerHTML='<span class="empty">Chuỗi thao tác đang trống.</span>';return;}history.slice(-48).forEach(m=>{const t=document.createElement("span");t.className="token";t.textContent=m;$("history").appendChild(t);});}
+function startTimer(){if(startedAt)return;startedAt=performance.now();timerInterval=setInterval(()=>{$("timer").textContent=fmt(performance.now()-startedAt)},100)}
+function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}if(startedAt){const elapsed=performance.now()-startedAt;$("timer").textContent=fmt(elapsed);const best=Number(localStorage.getItem("rubik-best")||0);if(!best||elapsed<best){localStorage.setItem("rubik-best",String(elapsed));$("best").textContent=fmt(elapsed);}}startedAt=0}
+const oldBest=Number(localStorage.getItem("rubik-best")||0);$("best").textContent=oldBest?fmt(oldBest):"--:--.-";
+function resize(){const w=host.clientWidth,h=host.clientHeight;camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(host);resize();
+function makeCube(){for(const c of cubies){scene.remove(c);c.geometry.dispose();c.material.forEach(m=>m.dispose());}cubies=[];history=[];moveCount=0;startedAt=0;if(timerInterval)clearInterval(timerInterval);timerInterval=null;$("timer").textContent="00:00.0";
+const geo=new RoundedBoxGeometry(.94,.94,.94,3,.055);
+for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++){
+const mats=[new THREE.MeshPhysicalMaterial({color:x===1?faceColors.xp:dark,roughness:.3,metalness:.04,clearcoat:.55}),new THREE.MeshPhysicalMaterial({color:x===-1?faceColors.xn:dark,roughness:.3,metalness:.04,clearcoat:.55}),new THREE.MeshPhysicalMaterial({color:y===1?faceColors.yp:dark,roughness:.3,metalness:.04,clearcoat:.55}),new THREE.MeshPhysicalMaterial({color:y===-1?faceColors.yn:dark,roughness:.3,metalness:.04,clearcoat:.55}),new THREE.MeshPhysicalMaterial({color:z===1?faceColors.zp:dark,roughness:.3,metalness:.04,clearcoat:.55}),new THREE.MeshPhysicalMaterial({color:z===-1?faceColors.zn:dark,roughness:.3,metalness:.04,clearcoat:.55})];
+const mesh=new THREE.Mesh(geo,mats);mesh.position.set(x,y,z);mesh.userData.grid={x,y,z};mesh.castShadow=true;mesh.receiveShadow=true;scene.add(mesh);cubies.push(mesh);
+}updateStats();}
+const turns={U:{a:"y",l:1,v:-1},D:{a:"y",l:-1,v:1},R:{a:"x",l:1,v:-1},L:{a:"x",l:-1,v:1},F:{a:"z",l:1,v:-1},B:{a:"z",l:-1,v:1}};
+function invert(m){return m.endsWith("'")?m[0]:m+"'";}
+function rotateGrid(p,axis,angle){let {x,y,z}=p;if(axis==="x"){return angle<0?{x,y:z,z:-y}:{x,y:-z,z:y};}if(axis==="y"){return angle<0?{x:-z,y,z:x}:{x:z,y,z:-x};}return angle<0?{x:y,y:-x,z}:{x:-y,y:x,z};}
+function rotateFace(token){const face=turns[token[0]];const amount=token.endsWith("'")?-face.v:face.v;const axis=face.a,layer=face.l,angle=amount*Math.PI/2;const pivot=new THREE.Group();scene.add(pivot);const selected=cubies.filter(c=>Math.round(c.userData.grid[axis])===layer);selected.forEach(c=>pivot.attach(c));const from=0,to=angle,duration=190;return new Promise(resolve=>{let start=0;function frame(now){if(!start)start=now;const t=Math.min(1,(now-start)/duration),e=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;pivot.rotation[axis]=from+(to-from)*e;if(t<1){requestAnimationFrame(frame);return;}selected.forEach(c=>{const p=rotateGrid(c.userData.grid,axis,angle);c.userData.grid=p;scene.attach(c);c.position.set(p.x,p.y,p.z);});scene.remove(pivot);resolve();}requestAnimationFrame(frame);});}
+function enqueueMove(token,record=true){chain=chain.then(async()=>{busy=true;startTimer();await rotateFace(token);moveCount++;if(record)history.push(token);updateStats();busy=false;});return chain;}
+function scramble(){chain=chain.then(async()=>{history=[];moveCount=0;startedAt=0;if(timerInterval)clearInterval(timerInterval);timerInterval=null;$("timer").textContent="00:00.0";updateStats();let prev="";const faces=Object.keys(turns);const seq=[];for(let i=0;i<22;i++){let f;do{f=faces[Math.floor(Math.random()*faces.length)];}while(f===prev);prev=f;seq.push(Math.random()<.5?f:f+"'");}for(const m of seq){startTimer();await rotateFace(m);history.push(m);moveCount++;updateStats();}showToast("Đã tạo scramble 22 bước.");});}
+function solve(){chain=chain.then(async()=>{if(!history.length){showToast("Không có chuỗi thao tác để giải.");return;}const seq=history.slice().reverse().map(invert);showToast("Đang đảo ngược "+seq.length+" bước...");for(const m of seq){await rotateFace(m);moveCount++;}history=[];updateStats();stopTimer();showToast("Cube đã trở về trạng thái solved.");});}
+function undo(){chain=chain.then(async()=>{if(!history.length){showToast("Không còn thao tác để hoàn tác.");return;}const m=history.pop();await rotateFace(invert(m));moveCount++;updateStats();});}
+function reset(){chain=chain.then(()=>{makeCube();showToast("Đã đặt lại khối Rubik.");});}
+$("scramble").addEventListener("click",scramble);$("solve").addEventListener("click",solve);$("undo").addEventListener("click",undo);$("reset").addEventListener("click",reset);
+document.querySelectorAll("[data-m]").forEach(b=>b.addEventListener("click",()=>enqueueMove(b.dataset.m)));
+window.addEventListener("keydown",e=>{if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;const k=e.key.toUpperCase();if(turns[k]&&document.activeElement.tagName!=="BUTTON"&&document.activeElement.tagName!=="INPUT"){enqueueMove(k);}});
+makeCube();
+function render(){requestAnimationFrame(render);orbit.update();renderer.render(scene,camera);}render();
+</script>
+</body>
+</html>
