@@ -62,7 +62,34 @@ function startTimer(){if(startAt)return;startAt=performance.now();timerId=setInt
 function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}if(startAt){const t=performance.now()-startAt;$("timer").textContent=fmt(t);const best=Number(localStorage.getItem("rubik-best")||0);if(!best||t<best){localStorage.setItem("rubik-best",String(t));$("best").textContent=fmt(t);}}startAt=0}
 const best=Number(localStorage.getItem("rubik-best")||0);$("best").textContent=best?fmt(best):"--:--.-";
 function updateUI(){$("count").textContent=count;$("historyCount").textContent=history.length+" MOVES";const h=$("history");h.innerHTML="";if(!history.length){h.innerHTML='<span class="empty">Chưa có nước đi. Hãy bắt đầu xáo trộn hoặc chạm một mặt.</span>';return;}history.slice(-70).forEach(x=>{const s=document.createElement("span");s.className="token";s.textContent=x;h.appendChild(s);});}
-function resize(){const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight),mobile=w<600;camera.aspect=w/h;camera.fov=mobile?43:40;camera.position.set(mobile?4.9:4.35,mobile?3.9:3.7,mobile?8.0:6.8);camera.updateProjectionMatrix();renderer.setSize(w,h,false);orbit.update();}new ResizeObserver(resize).observe(host);resize();
+let lastAspect=0,cameraFitted=false;
+function fitCamera(){
+  if(!cubies.length)return;
+  const box=new THREE.Box3().setFromObject(root);
+  const center=box.getCenter(new THREE.Vector3());
+  const size=box.getSize(new THREE.Vector3());
+  const maxDim=Math.max(size.x,size.y,size.z);
+  const vFov=THREE.MathUtils.degToRad(camera.fov);
+  const hFov=2*Math.atan(Math.tan(vFov/2)*camera.aspect);
+  const limitingFov=Math.min(vFov,hFov);
+  const distance=(maxDim/(2*Math.tan(limitingFov/2)))*1.82;
+  const direction=new THREE.Vector3(1,.68,1.35).normalize();
+  orbit.target.copy(center);
+  camera.position.copy(center).addScaledVector(direction,distance);
+  camera.near=.1;camera.far=Math.max(80,distance*10);
+  camera.updateProjectionMatrix();camera.lookAt(center);
+  orbit.minDistance=distance*.62;orbit.maxDistance=distance*2.4;
+  orbit.update();cameraFitted=true;
+}
+function resize(){
+  const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);
+  const aspect=w/h,mobile=w<600;
+  camera.aspect=aspect;camera.fov=mobile?43:40;camera.updateProjectionMatrix();
+  renderer.setSize(w,h,false);
+  if(cubies.length&&(!cameraFitted||!lastAspect||Math.abs(aspect-lastAspect)>.22))fitCamera();
+  lastAspect=aspect;
+}
+new ResizeObserver(resize).observe(host);resize();
 const sharedGeo=new RoundedBoxGeometry(.94,.94,.94,3,.055);
 function makeCube(){for(const c of cubies)root.remove(c);cubies=[];history=[];count=0;stopTimer();$("timer").textContent="00:00.0";
 for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++){
@@ -87,7 +114,7 @@ function scramble(){queue=queue.then(async()=>{history=[];count=0;stopTimer();$(
 function solve(){queue=queue.then(async()=>{if(!history.length){toast("Chưa có chuỗi thao tác để giải.");return;}const seq=history.slice().reverse().map(inverse);toast("Đang giải ngược "+seq.length+" nước đi...");for(const m of seq){await rotateFace(m);count++;}history=[];stopTimer();updateUI();toast("Đã khôi phục trạng thái trước scramble.");});}
 function undo(){queue=queue.then(async()=>{if(!history.length){toast("Không còn nước đi để hoàn tác.");return;}const m=history.pop();await rotateFace(inverse(m));count++;updateUI();});}
 function reset(){queue=queue.then(()=>{makeCube();toast("Đã đưa Rubik về trạng thái solved.");});}
-function resetCamera(){orbit.reset();orbit.target.set(0,0,0);const mobile=host.clientWidth<600;camera.position.set(mobile?4.9:4.35,mobile?3.9:3.7,mobile?8:6.8);camera.lookAt(0,0,0);orbit.update();}
+function resetCamera(){fitCamera();}
 function setMode(next){mode=next;orbit.enabled=next==="orbit";$("faceMode").classList.toggle("active",mode==="face");$("orbitMode").classList.toggle("active",mode==="orbit");$("gestureHint").textContent=mode==="face"?"CHẠM MẶT ĐỂ XOAY · VUỐT THEO MẶT ĐỂ ĐỔI CHIỀU":"KÉO ĐỂ XOAY GÓC NHÌN · LĂN / CHỤM ĐỂ ZOOM";}
 $("faceMode").onclick=()=>setMode("face");$("orbitMode").onclick=()=>setMode("orbit");$("cameraReset").onclick=resetCamera;
 $("scramble").onclick=scramble;$("solve").onclick=solve;$("undo").onclick=undo;$("reset").onclick=reset;
